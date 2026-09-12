@@ -1,0 +1,85 @@
+# Generated from packaging/ember.rb.tmpl in
+# toni-schmitt/claude-code-statusline by the `update-tap` job of that repo's
+# release workflow, which substitutes the version and each tarball's checksum
+# from the release being published.
+#
+# Edit the template, never this file: the next release overwrites it.
+class Ember < Formula
+  desc "Two-line status line for Claude Code, with a subagent row renderer"
+  homepage "https://github.com/toni-schmitt/claude-code-statusline"
+  license "MIT"
+
+  # A formula rather than a cask: casks are macOS-only, and this covers
+  # Homebrew on Linux too. It installs the prebuilt Native AOT binaries, so no
+  # .NET SDK is needed on the target machine.
+  #
+  # There is no `version` stanza: Homebrew scans it from the URL, and declaring
+  # it as well trips the "redundant with version scanned from URL" audit.
+  #
+  # macOS ships ONE universal (x86_64 + arm64) tarball, so both arch blocks
+  # point at the same file. The duplication is deliberate: FormulaAudit's
+  # ComponentsOrder cop rejects `url`/`sha256` as direct children of `on_macos`,
+  # and only inspects direct children — so nesting one level down is what makes
+  # `brew audit --strict` pass.
+  on_macos do
+    on_arm do
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.0/ember-macos-universal.tar.gz"
+      sha256 "2662188e0b29a06cec3c7087cb8466f06332e6d201cc7ab92d8bb38c9a60eaf1"
+    end
+    on_intel do
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.0/ember-macos-universal.tar.gz"
+      sha256 "2662188e0b29a06cec3c7087cb8466f06332e6d201cc7ab92d8bb38c9a60eaf1"
+    end
+  end
+
+  on_linux do
+    on_intel do
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.0/ember-linux-x64.tar.gz"
+      sha256 "23f89cbd44764e3a091ce5b80bbedf08205d348049d1a5954d9df3e6e2c199bd"
+    end
+    on_arm do
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.0/ember-linux-arm64.tar.gz"
+      sha256 "c6f586118b9cc2cdee15b24e70d858cb5bbaaecea1aacd81cd9dc19bcf4f669f"
+    end
+  end
+
+  def install
+    bin.install "ember", "ember-subagent"
+  end
+
+  def caveats
+    <<~EOS
+      Point Claude Code at the binaries:
+
+        ember --install
+
+      That merges the statusLine block into ~/.claude/settings.json rather than
+      overwriting it, using this formula's own resolved paths.
+
+      The default icon set needs a Nerd Font in your terminal. Without one, add
+      --icons=unicode (or --icons=ascii) to the command in settings.json.
+    EOS
+  end
+
+  test do
+    # Model names are gradient-coloured one character at a time, so the name is
+    # only a contiguous substring once the ANSI escapes are stripped.
+    payload = <<~JSON
+      {"model":{"display_name":"Opus 5"},"effort":{"level":"xhigh"},
+       "workspace":{"project_dir":"/x/brew-test","current_dir":"/x"},
+       "session_id":"brew-test","cost":{"total_cost_usd":0.5,"total_duration_ms":60000},
+       "context_window":{"used_percentage":12}}
+    JSON
+
+    rendered = pipe_output(bin/"ember", payload).gsub(/\e\[[0-9;]*m/, "")
+    assert_match "Opus 5", rendered
+    assert_match "brew-test", rendered
+
+    rows = pipe_output(
+      bin/"ember-subagent",
+      '{"columns":80,"tasks":[{"id":"t1","name":"explore","status":"running",' \
+      '"description":"Search the codebase"}]}',
+    )
+    assert_match '"id":"t1"', rows
+  end
+end
