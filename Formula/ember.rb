@@ -23,23 +23,23 @@ class Ember < Formula
   # `brew audit --strict` pass.
   on_macos do
     on_arm do
-      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.1/ember-macos-universal.tar.gz"
-      sha256 "72c86c76df9346769f84db47e6284ac4d852314676293be16fe883283e4e38c7"
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.2.0/ember-macos-universal.tar.gz"
+      sha256 "b99e2059603c36478664e6dd4c9d6dec9455492d4a0b6186d7902798ea970f2f"
     end
     on_intel do
-      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.1/ember-macos-universal.tar.gz"
-      sha256 "72c86c76df9346769f84db47e6284ac4d852314676293be16fe883283e4e38c7"
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.2.0/ember-macos-universal.tar.gz"
+      sha256 "b99e2059603c36478664e6dd4c9d6dec9455492d4a0b6186d7902798ea970f2f"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.1/ember-linux-x64.tar.gz"
-      sha256 "a278786253f1c8931feaef1f793e5766776833272a886b616fc32398c0269a97"
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.2.0/ember-linux-x64.tar.gz"
+      sha256 "4c9a7213a89454513ef3f95f8bbe98c83bf74d3668541bbb176483626b581ed6"
     end
     on_arm do
-      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.1.1/ember-linux-arm64.tar.gz"
-      sha256 "e334d1c24063674505358eb9c03ff0851c1b2ed5015020f4e8065398b90b7f6b"
+      url "https://github.com/toni-schmitt/claude-code-statusline/releases/download/v0.2.0/ember-linux-arm64.tar.gz"
+      sha256 "94b4a9d5e44ebcdc80f38d1f8196ca35e6eb528db30dfb6f2d4ece2877dd427e"
     end
   end
 
